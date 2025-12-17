@@ -7,7 +7,7 @@ public class GameOfLife implements Board {
 
     public GameOfLife(int x, int y)
     {
-        // Construct a 2d array of the given x and y size.
+        board = new int[x][y];
     }
 
     // Set values on the board
@@ -21,6 +21,9 @@ public class GameOfLife implements Board {
 
     // Run the simulation for a number of turns
     public void run(int turns) {
+        for(int i=0; i<turns;i++) {
+            step();
+        }
         // call step the number of times requested
     }
 
@@ -28,17 +31,67 @@ public class GameOfLife implements Board {
     public void step()
     {
         print();
+        int numRows = board.length;
+        int numColumn = board[0].length;
+        int [][] nextBoard = new int[numRows][numColumn];
+
+        for(int i=0; i<numRows; i++) {
+            for(int a=0; a<numColumn,a++){
+                int numNeighbors = countNeighbors(i, a);
+                int position = board[i][a];
+                if(position==1){
+                    if(numNeighbors==2 || numNeighbors==3){
+                        nextBoard[i][a] = 1;
+                    }
+                    else{
+                        nextBoard[i][a] = 0;
+                    }
+                }
+                else{
+                    if(numNeighbors==3){
+                        nextBoard[i][a] = 1;
+                    }
+                    else{
+                        nextBoard[i][a] = 0;
+                    }
+                }
+            }
+        }
+        board = nextBoard;
+        print();
         // Update the game board, store a 1 if the cell is alive and a 0 otherwise.
     }
 
 
     public int countNeighbors(int x, int y) {
         int count = 0;
+        for(int i = -2; i < 2; i++){
+            if(get(x+i,y-1)==1){
+                count+=1;
+            }
+            else{
+                continue;
+            }
+        }
+        for(int i = -2; i < 2; i++){
+            if(get(x+i,y-1)==1){
+                count+=1;
+            }
+            else{
+                continue;
+            }
+        }
+        if(get(x-1,y)==1){
+            count+=1;
+        }
+        if(get(x+1,y)==1){
+            count+=1;
         // count the number of neighbors the cell has
         // use the get(x,y) method to read any board state you need.
         return count;
     }
-
+    return count;    
+        
     // Get a value from the board with "wrap around"
     // Locations outside the board will loop back into the board.
     // Ex: -1 will read board.length-1
